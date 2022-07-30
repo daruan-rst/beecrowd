@@ -15,26 +15,26 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int n = SC.nextInt();
+        SC.nextLine();  //lê o "\n" que o teclado.nextInt() deixa para trás.
         for (int i = 0 ; i<n ; i++){
-            scanAndDoTheMath();
+            scanAndParse();
         }
+        SC.close();
     }
 
-    private static void scanAndDoTheMath() {
-        String x = SC.next();
-        String operation = SC.next();
-        String y = SC.next();
-        int[] answer = doTheMath(makeItIntoNumber(x),
-                                 makeItIntoNumber(y),
-                                 operation);
+    private static void scanAndParse() {
+
+        String s = SC.nextLine();
+        String[] values = s.split(" ");
+        String operation = values[3];
+        int[] x = new int[]{Integer.parseInt(values[0]), Integer.parseInt(values[2])};
+        int[] y = new int[]{Integer.parseInt(values[4]), Integer.parseInt(values[6])};
+        int[] answer = doTheMath(x, y, operation);
         printTheSolution(answer);
 
     }
 
-    private static int[] makeItIntoNumber(String value) {
-        return new int[]{Integer.parseInt(value.split("/")[0]),
-                Integer.parseInt(value.split("/")[1])};
-    }
+
 
     private static int[] doTheMath(int[] x, int[] y, String o) {
         int[] answer;
@@ -66,14 +66,21 @@ public class Main {
     }
 
     private static void printTheSolution(int[] solution){
-        if (solution[1]<0){
-            solution[0] = Math.negateExact(solution[0]);
-            solution[1] = Math.negateExact(solution[1]);
+        formatNegativeSign(solution);
+        int[] simplifiedSolution = new int[]{ solution[0]/simplify(solution[0], solution[1])
+                , solution[1]/simplify(solution[0], solution[1])};
+        formatNegativeSign(simplifiedSolution);
+
+        System.out.printf("%d/%d = %d/%d\n", solution[0], solution[1], simplifiedSolution[0], simplifiedSolution[1]);
+
+    }
+
+    private static int[] formatNegativeSign(int[] fraction){
+        if (fraction[1]<0){
+            fraction[0] = Math.negateExact(fraction[0]);
+            fraction[1] = Math.negateExact(fraction[1]);
         }
-        System.out.println(solution[0] + "/" + solution[1]);
-        System.out.println(solution[0]/simplify(solution[0], solution[1]) + "/" + solution[1]/simplify(solution[0], solution[1]) );
-        System.out.printf("%d/%d = %d/%d", solution[0], solution[1], solution[0]/simplify(solution[0], solution[1])
-                , solution[1]/simplify(solution[0], solution[1]));
+        return fraction;
     }
 
 }
