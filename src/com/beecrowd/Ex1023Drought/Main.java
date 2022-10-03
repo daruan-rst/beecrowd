@@ -1,10 +1,10 @@
 package com.beecrowd.Ex1023Drought;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
-
 
 /**
  * IMPORTANT:
@@ -13,48 +13,50 @@ import java.util.Scanner;
  * El nombre de la clase debe ser "Main" para que su solución ejecutar
  */
 public class Main {
-    public static void main(String[] args) {
+    static int x, y, n, cityNumber, globalConsumption, globalPeople;
+    static Integer[] houseConsumption, numberOfPeople;
+    static double globalMean;
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int cityNumber = 0;
-        int x;
-        int y;
-        while (n != 0); {
-            int totalConsumption = 0;
-            int population = 0;
-            int[][] consumptionRecord = new int[n][2];
+        n = sc.nextInt();
+        while(n!=0) {
             cityNumber++;
+            houseConsumption = new Integer[n];
+            numberOfPeople = new Integer[n];
+            globalConsumption = 0;
+            globalPeople = 0;
+            sc.nextLine(); // remove \n do console
             for (int i = 0; i < n; i++) {
-                x = sc.nextInt();
-                y = sc.nextInt();
-                population = population + x;
-                totalConsumption = totalConsumption + y;
-                consumptionRecord[i][0] = x;
-                consumptionRecord[i][1] = y / x;
+                String values = sc.nextLine();
+                x = Integer.parseInt(values.split(" ")[0]);
+                y = Integer.parseInt(values.split(" ")[1]);
+                globalPeople = x + globalPeople;
+                globalConsumption = y +  globalConsumption;
+                houseConsumption[i] = y / x;
+                numberOfPeople[i] = x;
             }
+            List<Integer> consumption = new ArrayList<>(Arrays.asList(houseConsumption));
+            List<Integer> people = new ArrayList<>(Arrays.asList(numberOfPeople));
+            globalMean = (double)globalConsumption/globalPeople;
             System.out.printf("Cidade# %d:\n", cityNumber);
-            consumptionRecord = reorderTheResults(consumptionRecord);
-            for (int j = 0; j < n; j++) {
-                System.out.printf("%d-%d ", consumptionRecord[j][0], consumptionRecord[j][1]);
-            }
-            System.out.printf("\nConsumo médio: %.2f m3.\n", (float) (totalConsumption / population));
+            printValues(consumption, people);
+            System.out.printf("\nConsumo medio: %.2f m3.\n\n", globalMean);
             n = sc.nextInt();
         }
-
+        sc.close();
     }
-
-    private static int[][] reorderTheResults(int[][] array) {
-        for (int i = 1; i < array.length; i++) {
-            int lastValue = array[i - 1][1];
-            int thisValue = array[i][1];
-            if (thisValue < lastValue) {
-                int[] lastArray = array[i - 1];
-                array[i - 1] = array[i];
-                array[i] = lastArray;
-
-            }
-
+    private static double meanConsumption(List<Integer> hc, List<Integer> nop) {
+        return (hc.stream() .reduce(0, Integer::sum)) /
+                ((double) nop.stream().reduce(0, Integer::sum));
+    }
+    private static void printValues(List<Integer> consumption, List<Integer> people) {
+        while (consumption.size() > 0) {
+            int minValue = consumption.stream().min(Integer::compare).get();
+            int minIndex = consumption.indexOf(minValue);
+            System.out.printf("%d-%d ", people.get(minIndex),minValue);
+            consumption.remove(minIndex);
+            people.remove(minIndex);
         }
-        return array;
     }
 }
+
