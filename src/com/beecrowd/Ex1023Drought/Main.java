@@ -36,15 +36,15 @@ public class Main {
             }
             sortArraysByAverageHouseConsumption();
 
-            mapOfCitiesAndConsumption.put(cityNumber, pairOfHouseAndMeanConsumption());
+            mapOfCitiesAndAverageHouseConsumption.put(cityNumber, pairOfHouseAndMeanConsumption());
 
-            System.out.printf("Cidade# %d:\n", cityNumber);
-            System.out.println(pairOfHouseAndMeanConsumption());
-            calculateMeanConsumption();
-            System.out.printf("\nConsumo medio: %.2f m3.\n\n", globalMean);
+            mapOfCitiesAndConsumption.put(cityNumber, cityMeanConsumption());
+
             n = sc.nextInt();
         }
         sc.close();
+
+        printFinalResults();
     }
 
     private static void sortArraysByAverageHouseConsumption(){
@@ -69,12 +69,6 @@ public class Main {
         }
     }
 
-
-    private static double meanConsumption(List<Integer> hc, List<Integer> nop) {
-        return (hc.stream() .reduce(0, Integer::sum)) /
-                ((double) nop.stream().reduce(0, Integer::sum));
-    }
-
     private static void calculateMeanConsumption(){
         int totalPeople = 0;
         int totalConsumption = 0;
@@ -91,6 +85,22 @@ public class Main {
             secondAnswer = i > n-1 ? secondAnswer.concat("") : secondAnswer.concat(" ");
         }
         return secondAnswer;
+    }
+
+    private static String cityMeanConsumption() {
+        calculateMeanConsumption();
+        return String.format("Consumo medio: %.2f m3.", globalMean);
+    }
+
+    private static void printFinalResults(){
+        for (int i =1 ; i <= cityNumber ; i++){
+            System.out.printf("Cidade# %d:\n", i);
+            System.out.println(mapOfCitiesAndAverageHouseConsumption.get(i));
+            System.out.println(mapOfCitiesAndConsumption.get(i));
+            if (i != cityNumber) {
+                System.out.println("");
+            }
+        }
     }
 }
 
