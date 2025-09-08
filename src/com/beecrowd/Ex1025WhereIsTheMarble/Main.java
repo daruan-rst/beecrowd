@@ -16,7 +16,7 @@ public class Main {
             new Scanner(System.in);
     static ArrayList<Integer> nValues;
     static ArrayList<Integer> qValues;
-    static ArrayList<Integer> qPositions = new ArrayList<>();
+    static ArrayList<Integer> qPositions;
     static Integer n = -1;
     static Integer q = -1;
 
@@ -27,18 +27,23 @@ public class Main {
         while (checkCondition(n, q)) {
             nValues = new ArrayList<>();
             qValues = new ArrayList<>();
+            qPositions = new ArrayList<>();
             caseCounter++;
             String line = sc.nextLine();
             n = Integer.parseInt(line.split(" ")[0]);
             q = Integer.parseInt(line.split(" ")[1]);
+            if (!checkCondition(n, q)){
+                break;
+            }
             for (int i = 0; i < n; i++) {
                 nValues.add(sc.nextInt());
             }
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < q; i++) {
                 qValues.add(sc.nextInt());
             }
             findQValuePosition();
             printResults();
+            sc.nextLine();
         }
     }
 
